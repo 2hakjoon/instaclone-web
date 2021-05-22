@@ -9,4 +9,5 @@ export const Button = styled.input`
     text-align: center;
     padding: 8px 0px;
     font-weight: 600;
+    opacity: ${props => props.disabled ? "0.5":"1"}
 `;
