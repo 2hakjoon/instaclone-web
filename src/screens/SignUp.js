@@ -1,5 +1,4 @@
 import {
-    faFacebookSquare,
     faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -12,41 +11,45 @@ import { FormBox } from "../components/auth/FormBox";
 import { Input } from "../components/auth/Input";
 import { Separator } from "../components/auth/Separator";
 import { PageTitle } from "../components/PageTitle";
+import { FatLink } from "../components/shared";
 import { routes } from "../routes";
 
 
+const HeaderContainder = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+`
+
+
+const Subtitle = styled(FatLink)`
+    font-size: 16px;
+    width: 70%;
+    text-align: center;
+    margin-top : 10px;
+`
 
 
 
-const FacebookLogin = styled.div`
-    color: #385285;
-    span {
-        margin-left: 10px;
-        font-weight: 600;
-    }
-`;
-
-export const Login = () => {
+export const SignUp = () => {
     return (
         <AuthLayout>
-            <PageTitle title ="Login"/>
+            
+            <PageTitle title ="SignUp"/>
             <FormBox>
-                <div>
+                <HeaderContainder>
                     <FontAwesomeIcon icon={faInstagram} size="3x" />
-                </div>
+                    <Subtitle>Sign up to see photos and videos from your friends</Subtitle>
+                </HeaderContainder>
                 <form>
+                    <Input type="text" placeholder="Email" />
+                    <Input type="text" placeholder="Name" />
                     <Input type="text" placeholder="Username" />
                     <Input type="password" placeholder="Password" />
                     <Button type="submit" value="Log in" />
                 </form>
-                <Separator>
-                </Separator>
-                <FacebookLogin>
-                    <FontAwesomeIcon icon={faFacebookSquare} />
-                    <span>Log in with Facebook</span>
-                </FacebookLogin>
             </FormBox>
-            <BottomBox cta="Don't have an account?" link={routes.signUp} linkText="Sign Up" />
+            <BottomBox cta="Have an account?" link={routes.home} linkText="Log in" />
         </AuthLayout>
     );
 };
