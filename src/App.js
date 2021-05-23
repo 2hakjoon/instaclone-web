@@ -1,10 +1,10 @@
-import { useReactiveVar } from "@apollo/client";
+import { ApolloProvider, useReactiveVar } from "@apollo/client";
 import { useState } from "react";
 import {HashRouter as Router, Route, Switch} from "react-router-dom";
 import Home from "./screens/Home";
 import { Login } from "./screens/Login";
 import NotFound from "./screens/NotFound";
-import {darkModeVar, isLoggedInVar} from "./apollo";
+import {client, darkModeVar, isLoggedInVar} from "./apollo";
 import { ThemeProvider } from "styled-components";
 import { GlobalStyles, lightTheme } from "./styles";
 import { SignUp } from "./screens/SignUp";
@@ -15,26 +15,28 @@ function App() {
   const isLoggedIn= useReactiveVar(isLoggedInVar);
   const darkMode = useReactiveVar(darkModeVar);
   return (
-    <HelmetProvider>
-      <ThemeProvider theme={lightTheme}>
-        <GlobalStyles/>
-          <Router>
-            <Switch>
-              <Route path="/" exact>
-                {isLoggedIn ? <Home /> : <Login />}
-              </Route>
-                {!isLoggedIn ? (
-                  <Route path={routes.signUp}>
-                    <SignUp />
-                  </Route>
-                ): null}
-              <Route>
-                <NotFound/>
-              </Route>
-            </Switch>
-          </Router>
-      </ThemeProvider>
-    </HelmetProvider>
+    <ApolloProvider client={client}>
+      <HelmetProvider>
+        <ThemeProvider theme={lightTheme}>
+          <GlobalStyles/>
+            <Router>
+              <Switch>
+                <Route path="/" exact>
+                  {isLoggedIn ? <Home /> : <Login />}
+                </Route>
+                  {!isLoggedIn ? (
+                    <Route path={routes.signUp}>
+                      <SignUp />
+                    </Route>
+                  ): null}
+                <Route>
+                  <NotFound/>
+                </Route>
+              </Switch>
+            </Router>
+        </ThemeProvider>
+      </HelmetProvider>
+    </ApolloProvider>
   );
 }
 

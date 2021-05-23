@@ -1,11 +1,14 @@
+import { useMutation } from "@apollo/client";
 import {
     faFacebookSquare,
     faInstagram,
 } from "@fortawesome/free-brands-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import gql from "graphql-tag";
 import { Helmet } from "react-helmet-async";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
+import { logUserIn } from "../apollo";
 import { AuthLayout } from "../components/auth/AuthLayout";
 import { BottomBox } from "../components/auth/BottomBox";
 import { Button } from "../components/auth/Button";
@@ -24,16 +27,53 @@ const FacebookLogin = styled.div`
     }
 `;
 
+const LOGIN_MUTATION = gql`
+    mutation login($username: String!, $password: String!) {
+        login(username: $username, password: $password) {
+            ok
+            token
+            error
+        }
+    }
+`;
+
+
+
 export const Login = () => {
-    const { register, watch, handleSubmit, formState } = useForm({
+    const { register, watch, handleSubmit, errors, formState, getValues, setError, clearErrors} = useForm({
         mode: "onChange",
     });
+
+    const onCompleted = (data) => {
+        const {login: {ok, error, token}} = data;
+        if(!ok){
+            setError("result",{
+                type: "manual",
+                message:error,
+            })
+        }
+        if(token){
+            logUserIn(token)
+        }
+    }
+    const [login, { loading }] = useMutation(LOGIN_MUTATION,{
+        onCompleted
+    });
+
     const onSubmitValid = (data) => {
-        console.log(data);
+        if(loading){
+            return;
+        }
+        const { username, password } = getValues();
+        login({
+            variables: {
+                username,
+                password
+            },
+        });
     };
-    const onSubmitInValid = (data) => {
-        console.log(data);
-    };
+
+    const clearLoginError = () => clearErrors("result")
     return (
         <AuthLayout>
             <PageTitle title="Login" />
@@ -41,7 +81,7 @@ export const Login = () => {
                 <div>
                     <FontAwesomeIcon icon={faInstagram} size="3x" />
                 </div>
-                <form onSubmit={handleSubmit(onSubmitValid, onSubmitInValid)}>
+                <form onSubmit={handleSubmit(onSubmitValid)}>
                     <Input
                         {...register("username", {
                             required: "Username should be longer than 5 chars",
@@ -54,9 +94,10 @@ export const Login = () => {
                         type="text"
                         placeholder="Username"
                         hasError={Boolean(formState.errors?.username?.message)}
+                        onFocus={clearLoginError}
                     />
-                    <FormError message={formState.errors?.username?.message}/>
-                    
+                    <FormError message={formState.errors?.username?.message} />
+
                     <Input
                         {...register("password", {
                             required: "password should be longer than 5 chars",
@@ -69,14 +110,16 @@ export const Login = () => {
                         type="password"
                         placeholder="Password"
                         hasError={formState.errors?.password?.message}
+                        onFocus={clearLoginError}
                     />
-                    <FormError message={formState.errors?.password?.message}/>
+                    <FormError message={formState.errors?.password?.message} />
 
                     <Button
                         type="submit"
-                        value="Log in"
-                        disabled={!formState.isValid}
+                        value={loading? "Loading..." : "Log in"}
+                        disabled={!formState.isValid || loading}
                     />
+                    <FormError message={formState.errors?.result?.message} />
                 </form>
                 <Separator></Separator>
                 <FacebookLogin>
