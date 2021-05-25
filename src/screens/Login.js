@@ -47,8 +47,8 @@ export const Login = () => {
     const { register, watch, handleSubmit, errors, formState, getValues, setError, clearErrors} = useForm({
         mode: "onChange",
         defaultValues:{
-            username : location.state.username || "",
-            password : location.state.password || ""
+            username : location?.state?.username || "",
+            password : location?.state?.password || ""
         }
     });
 
