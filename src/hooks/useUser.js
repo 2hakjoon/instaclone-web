@@ -25,5 +25,5 @@ export const useUser= () => {
             console.log(data)
         }
     }, [data])
-    return;
+    return {data};
 }
