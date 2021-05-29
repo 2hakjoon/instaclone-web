@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { isLoggedInVar } from "../apollo";
 import { useUser } from "../hooks/useUser";
 import { routes } from "../routes";
-import Avatar from "./Avatar";
+import {Avatar} from "./Avatar";
 
 const SHeader = styled.header`
     width: 100%;

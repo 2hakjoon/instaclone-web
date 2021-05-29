@@ -1,6 +1,5 @@
 import { ApolloClient, createHttpLink, InMemoryCache, makeVar } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-import { Header } from "./components/Header";
 
 const TOKEN = "TOKEN";
 const DARK_MODE = "DARK_MODE";

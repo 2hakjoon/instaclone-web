@@ -18,5 +18,3 @@ export const Avatar = ({url =""}) => {
         {url !== ""? <Img src={url}/> : null}
     </SAvatar>
 }
-
-export default Avatar;
