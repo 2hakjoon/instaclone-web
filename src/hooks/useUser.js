@@ -22,7 +22,6 @@ export const useUser= () => {
             logUserOut()
         }
         else{
-            console.log(data)
         }
     }, [data])
     return {data};
