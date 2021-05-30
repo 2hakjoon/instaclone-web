@@ -1,6 +1,7 @@
 import { useQuery } from "@apollo/client";
 import { faBookmark, faComment, faHeart, faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {faHeart as SolidHeart} from "@fortawesome/free-solid-svg-icons";
 import gql from "graphql-tag";
 import styled from "styled-components";
 import { isLoggedInVar, logUserOut } from "../apollo";
@@ -23,6 +24,7 @@ const FEED_QUERY = gql`
             }
             createdAt
             isMine
+            isLiked
         }
     }
 `
@@ -32,6 +34,7 @@ const PhotoContainer = styled.div`
     border:1px solid ${(props) => props.theme.borderColor};
     margin-bottom: 20px;
     max-width: 615px;
+    border-radius : 10px;
 `
 
 const PhotoHeader = styled.div`
@@ -68,8 +71,8 @@ const PhotoAction = styled.div`
 `
 
 const Likes = styled(FatText)`
-    margin-top : 15px;
     display : block;
+    padding : 15px;
 `
 
 function Home () {
@@ -87,7 +90,7 @@ function Home () {
                             <PhotoData>
                                 <PhotoActions>
                                     <div>
-                                        <PhotoAction><FontAwesomeIcon size={"2x"}icon={faHeart}/></PhotoAction>
+                                        <PhotoAction><FontAwesomeIcon style={{color: (photo.isLiked? "tomato":"inherit")}} size={"2x"}icon={photo.isLiked ? SolidHeart : faHeart}/></PhotoAction>
                                         <PhotoAction><FontAwesomeIcon size={"2x"}icon={faComment}/></PhotoAction>
                                         <PhotoAction><FontAwesomeIcon size={"2x"}icon={faPaperPlane}/></PhotoAction>
                                     </div>
