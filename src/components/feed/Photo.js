@@ -1,4 +1,5 @@
 import { useMutation } from "@apollo/client";
+import { cacheSlot } from "@apollo/client/cache";
 import { faBookmark, faComment, faHeart, faPaperPlane } from "@fortawesome/free-regular-svg-icons";
 import {faHeart as SolidHeart} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -75,8 +76,31 @@ export const Photo = ({
     file,
     isLiked,
     likes}) => {
-
-    const [toggleLikeMutation, {loading}] = useMutation(TOGGLE_LIKE_MUTATION,{variables:{id},});
+        const updateToggleLike = (cache, result ) => {
+            const{
+                data:{
+                    toggleLike:{ok},
+                }
+            } = result;
+            if(ok){
+                cache.writeFragment({
+                    id: `Photo:${id}`,
+                    fragment: gql`
+                        fragment BSName on Photo{
+                            isLiked
+                        }
+                    `,
+                    data:{
+                        isLiked: !isLiked
+                    }
+                })
+            }
+        }
+    const [toggleLikeMutation, { loading }] = useMutation(
+        TOGGLE_LIKE_MUTATION,
+        { variables: { id },
+        update: updateToggleLike }
+    );
 
     return(
         <PhotoContainer key={id}>
