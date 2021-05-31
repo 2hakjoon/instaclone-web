@@ -76,24 +76,35 @@ export const Photo = ({
     file,
     isLiked,
     likes}) => {
-        const updateToggleLike = (cache, result ) => {
+        const updateToggleLike = (cache, result) => {
             const{
                 data:{
                     toggleLike:{ok},
                 }
             } = result;
             if(ok){
-                cache.writeFragment({
-                    id: `Photo:${id}`,
-                    fragment: gql`
-                        fragment BSName on Photo{
-                            isLiked
-                        }
-                    `,
-                    data:{
-                        isLiked: !isLiked
+                const fragmentId = `Photo:${id}`
+                const fragment = gql`
+                    fragment BSName on Photo{
+                        isLiked
+                        likes
                     }
-                })
+                `;
+                const result = cache.readFragment({
+                    id: fragmentId,
+                    fragment,
+                });
+                if("isLiked" in result && "likes" in result){
+                    const {isLiked:cacheIsLiked, likes:cacheLikes} = result;
+                    cache.writeFragment({
+                        id: fragmentId,
+                        fragment,
+                        data:{
+                            isLiked: !cacheIsLiked,
+                            likes: cacheIsLiked ? cacheLikes -1 : cacheLikes + 1
+                        }
+                    })
+                }
             }
         }
     const [toggleLikeMutation, { loading }] = useMutation(
