@@ -9,8 +9,7 @@ import styled from "styled-components";
 import { logUserOut } from "../../apollo";
 import { Avatar } from "../Avatar";
 import { FatText } from "../shared";
-
-
+import {Comments} from "./Comments";
 
 const TOGGLE_LIKE_MUTATION = gql`
     mutation toggleLine($id:Int!){
@@ -70,12 +69,16 @@ const Likes = styled(FatText)`
 `
 
 
+
 export const Photo = ({
     id,
     user,
     file,
     isLiked,
-    likes}) => {
+    likes,
+    caption,
+    comments,
+    totalComments}) => {
         const updateToggleLike = (cache, result) => {
             const{
                 data:{
@@ -133,6 +136,7 @@ export const Photo = ({
                         <FontAwesomeIcon icon={faBookmark}/>
                     </PhotoActions>
                     <Likes>{likes === 1? "1 like" : `${likes} likes`}</Likes>
+                    <Comments author={user.username} caption={caption} coments={comments} totalComments={totalComments}/>
                 </PhotoData>
         </PhotoContainer>
         )
@@ -147,4 +151,16 @@ Photo.propTypes = {
     file:PropTypes.string.isRequired,
     isLiked:PropTypes.bool.isRequired,
     likes:PropTypes.number.isRequired,
+    caption:PropTypes.string,
+    totalComments:PropTypes.number.isRequired,
+    comments: PropTypes.arrayOf(PropTypes.shape({
+        id:PropTypes.number.isRequired,
+        user:PropTypes.shape({
+            avatar:PropTypes.string.isRequired,
+            username:PropTypes.string.isRequired,
+        }),
+        payload:PropTypes.bool.isRequired,
+        isMine:PropTypes.bool.isRequired,
+        createdAt:PropTypes.string.isRequired,
+    }))
 }

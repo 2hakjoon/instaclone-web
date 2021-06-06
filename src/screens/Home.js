@@ -17,10 +17,18 @@ const FEED_QUERY = gql`
             likes
             comments{
                 id
+                user{
+                    username
+                    avatar
+                }
+                payload
+                isMine
+                createdAt
             }
             createdAt
             isMine
             isLiked
+            totalComments
         }
     }
 `
