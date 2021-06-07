@@ -5,6 +5,7 @@ import {faHeart as SolidHeart} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import gql from "graphql-tag";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { logUserOut } from "../../apollo";
 import { Avatar } from "../Avatar";
@@ -112,8 +113,13 @@ export const Photo = ({
     return(
         <PhotoContainer key={id}>
             <PhotoHeader>
-                <Avatar url={user.avatar} lg/>
-                <Username>{user.username}</Username>
+                <Link to={`/users/${user.username}`}>
+                    <Avatar url={user.avatar} lg/>
+                </Link>
+
+                <Link to={`/users/${user.username}`}>
+                    <Username>{user.username}</Username>
+                </Link>
             </PhotoHeader>
                 <PhotoFile src={file} />
                 <PhotoData>

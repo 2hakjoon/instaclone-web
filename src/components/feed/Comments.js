@@ -80,7 +80,7 @@ export const Comments = ({photoId, author, caption, totalComments, comments}) =>
         <CommentsContainer>
             <Comment author={author} payload={caption}/>
             <CommentCount>{totalComments === 1 ? "1 comment" : `${totalComments} comments`}</CommentCount>
-            {comments?.map(comment => <Comment key={comment.id} author={comment.user.username} payload={comment.payload} />)}
+            {comments?.map(comment => <Comment key={comment.id} id={comment.id} photoId = {photoId} author={comment.user.username} payload={comment.payload} isMine={comment.isMine} />)}
             <div>
                 <form onSubmit={handleSubmit(onVaild)}>
                     <input {...register("payload", { required: true })} type="text" placeholder="Write a comment"/>

@@ -29,4 +29,8 @@ export const GlobalStyles = createGlobalStyle`
         font-family: 'Open Sans', sans-serif;
         color:${props => props.theme.fontColor}
     }
+    a{
+        text-decoration: none;
+        color:inherit
+    }
 `
